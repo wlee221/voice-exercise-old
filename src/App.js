@@ -28,19 +28,25 @@ class App extends React.Component {
     return idx + 12 * (octave + 1); // assuming middle C = C4 = 60
   }
 
-  playRoutine(notes) {
+  noteNamesToNumbers(note_names) {
+    var note_numbers = Array(note_names.length);
+    note_names.forEach((note, idx) => {
+      note_numbers[idx] = this.noteNameToNumber(note);
+    });
+    return note_numbers;
+  }
+
+  playRoutine(notes, chords) {
     const bpm = 60;
-    const instrument = 3;
     const note_length = 30 / bpm; // eighth note length
     notes.forEach((note, idx) => {
-      console.log([note])
       const time = this.midiSounds.contextTime();
       this.midiSounds.playChordAt(time + note_length * idx, 3, [note], note_length);
-    })
+    });
   }
 
   render() {
-    const notes = [60, 62, 64, 65, 67, 65, 64, 62, 60];
+    const notes = ["C4", "D4", "E4", "F4", "G4"];
     return (
       <div className="App">
         <header className="App-header">
@@ -49,7 +55,7 @@ class App extends React.Component {
         <div className="App">
           <button
             onClick={() => {
-              this.playRoutine(notes)
+              this.playRoutine(this.noteNamesToNumbers(notes))
             }}
           >
             Play C maj
