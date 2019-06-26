@@ -1,0 +1,16 @@
+type Routine @model {
+  description: String!
+  notes: [Note]! @connection
+  chords: [Chord] @connection
+  startNote: Int
+  endNote: Int
+  tempo: Int
+}
+
+type Note @model {
+  note: Int!
+}
+
+type Chord @model {
+  chord: [Note] @connection
+}

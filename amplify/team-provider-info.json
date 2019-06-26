@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "voice-exercise-dev-20190626121454-authRole",
+            "UnauthRoleArn": "arn:aws:iam::107406480916:role/voice-exercise-dev-20190626121454-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::107406480916:role/voice-exercise-dev-20190626121454-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "voice-exercise-dev-20190626121454-deployment",
+            "UnauthRoleName": "voice-exercise-dev-20190626121454-unauthRole",
+            "StackName": "voice-exercise-dev-20190626121454",
+            "StackId": "arn:aws:cloudformation:us-west-2:107406480916:stack/voice-exercise-dev-20190626121454/ae18bbe0-9846-11e9-b9f3-0242fa89e25c"
+        }
+    }
+}
