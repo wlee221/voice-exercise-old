@@ -18,7 +18,7 @@ class App extends React.Component {
       throw new Error(
         ```
         Invalid tone name: ${tone}. Your tone name should be one of 
-        C, C#, D, ..., B (case insensitive). Please use sharp instead of flats.
+        C, C#, D, ..., B (case insensitive). Please use sharps instead of flats.
         ```
       ); // TODO: recognize flats as well.
     } else if (isNaN(octave) || octave < 1 || octave > 9) {
@@ -28,7 +28,19 @@ class App extends React.Component {
     return idx + 12 * (octave + 1); // assuming middle C = C4 = 60
   }
 
+  playRoutine(notes) {
+    const bpm = 60;
+    const instrument = 3;
+    const note_length = 30 / bpm; // eighth note length
+    notes.forEach((note, idx) => {
+      console.log([note])
+      const time = this.midiSounds.contextTime();
+      this.midiSounds.playChordAt(time + note_length * idx, 3, [note], note_length);
+    })
+  }
+
   render() {
+    const notes = [60, 62, 64, 65, 67, 65, 64, 62, 60];
     return (
       <div className="App">
         <header className="App-header">
@@ -37,7 +49,7 @@ class App extends React.Component {
         <div className="App">
           <button
             onClick={() => {
-              this.midiSounds.playChordNow(3, [60, 64, 67], 0.5);
+              this.playRoutine(notes)
             }}
           >
             Play C maj
