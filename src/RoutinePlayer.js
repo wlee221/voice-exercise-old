@@ -2,21 +2,19 @@ import React from 'react';
 import { convertNote, parseRawStringPhrase, InvalidInputError } from './note-conversion.js'
 import MIDISounds from 'midi-sounds-react';
 
+const defaultRoutine = {
+  routine: "1 2 3 4 5 6 5 4 3 2 1",
+  name: "Major Scale 6 notes",
+  author: "wlee221"
+};
+
 class RoutinePlayer extends React.Component {
   constructor(props) {
-    const phrase1 = {
-      phrase: "1 2 3 4 5 6 5 4 3 2 1",
-      name: "Major Scale 6 notes"
-    };
-    const phrase2 = {
-      phrase: "1 2 3 4 5 4 3 2 1",
-      name: "Major Scale 5 notes"
-    };
     super(props);
+
     this.state = {
       playing: false,
-      phrases: [phrase1, phrase2],
-      phraseChosen: phrase1,
+      phraseChosen: defaultRoutine,
       errorMessage: null,
       tempo: 60,
       startNote: "C4",
@@ -65,11 +63,10 @@ class RoutinePlayer extends React.Component {
     this.setState({ errorMessage: null })
     var startNote, endNote, notes;
     // input validation using a try catch block
-    console.log(this.state.phraseChosen.phrase)
     try {
       startNote = convertNote(this.state.startNote);
       endNote = convertNote(this.state.endNote);
-      notes = parseRawStringPhrase(this.state.phraseChosen.phrase);
+      notes = parseRawStringPhrase(this.state.phraseChosen.routine);
     } catch (err) {
       if (err instanceof InvalidInputError) {
         this.setState({ errorMessage: err.message });
@@ -82,8 +79,10 @@ class RoutinePlayer extends React.Component {
   }
 
   render() {
-    console.log(this.state) // TODO: REMOVE THIS
-    var routineOptions = this.state.phrases.map((val, idx) => {
+    var routines = this.props.userRoutines || [];
+    routines = [defaultRoutine, ...routines]
+    this.routines = routines;
+    var routineOptions = this.routines.map((val, idx) => {
       return (
         <option key={`routine${idx}`} value={idx}>
           {val.name}
@@ -92,11 +91,15 @@ class RoutinePlayer extends React.Component {
     });
     return (
       <div className="player">
-        <font color='red'>{this.state.errorMessage}</font>
+        <MIDISounds
+          ref={(ref) => this.midiSounds = ref}
+          appElementName="root" instruments={[3]}
+        />
+        <h2>Start Routine</h2>
         <br />Choose your routine:&nbsp;&nbsp;
         <select className="routines" onChange={evt =>
           this.setState({
-            phraseChosen: this.state.phrases[evt.target.value]
+            phraseChosen: this.routines[evt.target.value]
           })
         }>
           {routineOptions}
@@ -155,10 +158,7 @@ class RoutinePlayer extends React.Component {
             }}
           />
         </form>
-        <MIDISounds
-          ref={(ref) => this.midiSounds = ref}
-          appElementName="root" instruments={[3]}
-        />
+        <font color='red'>{this.state.errorMessage}</font>
       </div>
     )
   }

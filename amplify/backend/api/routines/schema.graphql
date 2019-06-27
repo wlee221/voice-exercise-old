@@ -1,10 +1,5 @@
-type User @model {
-  username: String!
-  routines: [Routine] @connection
-}
-
 type Routine @model {
-  username: String!
   name: String!
-  phrase: String!
+  author: String!
+  routine: String!
 }

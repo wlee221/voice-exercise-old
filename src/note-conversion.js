@@ -22,7 +22,7 @@ export function convertNote(note_name) {
     throw new InvalidInputError(`Invalid note name: ${note_name}. Your note name should be of length 2 or 3.`);
   } else if (idx === -1) {
     throw new InvalidInputError(
-      `Invalid tone name: ${tone}. Your tone name should be one of
+      `Invalid tone name: ${note_name}. Your tone name should be one of
         C, C#, D, ..., B (case insensitive). Please use sharps instead of flats.
       `
     ); // TODO: recognize flats as well.
