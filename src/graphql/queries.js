@@ -1,21 +1,41 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getRoutine = `query GetRoutine($id: ID!) {
-  getRoutine(id: $id) {
-    description
-    notes {
+export const getUser = `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    username
+    routines {
       items {
-        note
+        username
+        name
+        phrase
       }
       nextToken
     }
-    chords {
-      nextToken
+  }
+}
+`;
+export const listUsers = `query ListUsers(
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      username
+      routines {
+        nextToken
+      }
     }
-    startNote
-    endNote
-    tempo
+    nextToken
+  }
+}
+`;
+export const getRoutine = `query GetRoutine($id: ID!) {
+  getRoutine(id: $id) {
+    username
+    name
+    phrase
   }
 }
 `;
@@ -26,61 +46,9 @@ export const listRoutines = `query ListRoutines(
 ) {
   listRoutines(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
-      description
-      notes {
-        nextToken
-      }
-      chords {
-        nextToken
-      }
-      startNote
-      endNote
-      tempo
-    }
-    nextToken
-  }
-}
-`;
-export const getNote = `query GetNote($id: ID!) {
-  getNote(id: $id) {
-    note
-  }
-}
-`;
-export const listNotes = `query ListNotes(
-  $filter: ModelNoteFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      note
-    }
-    nextToken
-  }
-}
-`;
-export const getChord = `query GetChord($id: ID!) {
-  getChord(id: $id) {
-    chord {
-      items {
-        note
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const listChords = `query ListChords(
-  $filter: ModelChordFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listChords(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      chord {
-        nextToken
-      }
+      username
+      name
+      phrase
     }
     nextToken
   }

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-amplify": "^1.1.29",
+    "midi-sounds-react": "^1.2.45",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
-    "midi-sounds-react": "^1.2.45"
+    "react-scripts": "3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

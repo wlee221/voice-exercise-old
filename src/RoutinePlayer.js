@@ -1,16 +1,16 @@
 import React from 'react';
-import { convertNotes } from './note-conversion.js'
+import { convertNote, parseRawStringPhrase, InvalidInputError } from './note-conversion.js'
 import MIDISounds from 'midi-sounds-react';
 
 class RoutinePlayer extends React.Component {
   constructor(props) {
     const phrase1 = {
-      phrase: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"],
-      description: "Major Scale 5 notes"
+      phrase: "1 2 3 4 5 6 5 4 3 2 1",
+      name: "Major Scale 6 notes"
     };
     const phrase2 = {
-      phrase: ["C4", "D4", "D#4", "F4", "G4", "F4", "D#4", "D4", "C4"],
-      description: "Minor Scale 5 notes"
+      phrase: "1 2 3 4 5 4 3 2 1",
+      name: "Major Scale 5 notes"
     };
     super(props);
     this.state = {
@@ -24,15 +24,61 @@ class RoutinePlayer extends React.Component {
     }
   }
 
-  playPhrase(notes) {
-    if (this.state.playing)
-      return; 
-    notes = convertNotes(notes)
+
+  startPractice(startNote, endNote, notes) {
+    // TODO: add pause and stop button.
+    if (this.state.playing) return;
+    // console.log(startNote, endNote, notes);
+    const increment = startNote - notes[0];
+    const highestNoteOnPhrase = Math.max(...notes) + increment;
+    const nRoutines = endNote - highestNoteOnPhrase + 1;
+    // console.log(increment, highestNoteOnPhrase, nRoutines);
+    if (nRoutines <= 0) {
+      this.setState({ errorMessage: "Your phrase goes too high for your selected end note. Either increase your end note or lower your start note." });
+      return;
+    }
     const note_length = 30 / this.state.tempo; // eighth note length
-    notes.forEach((note, idx) => {
-      const time = this.midiSounds.contextTime();
-      this.midiSounds.playChordAt(time + note_length * idx, 3, [note], note_length); // TODO: come up with a new play design; reset this.state.playing on finish
-    });
+    this.setState({ playing: true })
+    for (var i = 0; i < nRoutines; ++i) {
+      for (var j = 0; j < notes.length; ++j) {
+        // TODO: Move down the scale too
+        const note = notes[j] + increment + i;
+        const time = (j * note_length + notes.length * note_length * i + note_length * i) * 1000;
+        const finished = (i === nRoutines - 1 && j === notes.length - 1)
+        this.playNoteAt(note, time, note_length, finished)
+      }
+    }
+  }
+
+  playNoteAt(note, time, note_length, finished) {
+    setTimeout(() => {
+      if (finished) {
+        this.setState({ playing: false })
+      }
+      this.midiSounds.playChordNow(3, [note], note_length);
+      // TODO: call next setTimeout here so that only one timeout is active while the app is running.
+    }, time)
+  }
+
+  onSubmit() {
+    if (this.state.playing) return;
+    this.setState({ errorMessage: null })
+    var startNote, endNote, notes;
+    // input validation using a try catch block
+    console.log(this.state.phraseChosen.phrase)
+    try {
+      startNote = convertNote(this.state.startNote);
+      endNote = convertNote(this.state.endNote);
+      notes = parseRawStringPhrase(this.state.phraseChosen.phrase);
+    } catch (err) {
+      if (err instanceof InvalidInputError) {
+        this.setState({ errorMessage: err.message });
+        return;
+      } else {
+        throw err;
+      }
+    }
+    this.startPractice(startNote, endNote, notes);
   }
 
   render() {
@@ -40,12 +86,13 @@ class RoutinePlayer extends React.Component {
     var routineOptions = this.state.phrases.map((val, idx) => {
       return (
         <option key={`routine${idx}`} value={idx}>
-          {val.description}
+          {val.name}
         </option>
       )
     });
     return (
       <div className="player">
+        <font color='red'>{this.state.errorMessage}</font>
         <br />Choose your routine:&nbsp;&nbsp;
         <select className="routines" onChange={evt =>
           this.setState({
@@ -104,10 +151,7 @@ class RoutinePlayer extends React.Component {
             type="button"
             value="Start Practicing!"
             onClick={() => {
-              this.setState({
-                playing: true,
-              })
-              this.playPhrase(this.state.phraseChosen.phrase)
+              this.onSubmit();
             }}
           />
         </form>
