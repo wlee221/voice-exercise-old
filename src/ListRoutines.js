@@ -5,7 +5,7 @@ class ListRoutines extends React.Component {
   render() {
     const routines = this.props.othersRoutines.map((val, idx) => {
       return (
-        <p key = {idx}>
+        <p key = {idx} onClick = {evt => console.log(evt.target.key)}>
           <b>{`${val.name}`}</b>
           <br/>{`    Author: ${val.author}`}
           <br/>{`    Routine: ${val.routine}`}

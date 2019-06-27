@@ -14,9 +14,9 @@ class RoutinePlayer extends React.Component {
 
     this.state = {
       playing: false,
-      phraseChosen: defaultRoutine,
+      chosenRoutine: defaultRoutine,
       errorMessage: null,
-      tempo: 60,
+      tempo: 120,
       startNote: "C4",
       endNote: "G5"
     }
@@ -35,7 +35,7 @@ class RoutinePlayer extends React.Component {
       this.setState({ errorMessage: "Your phrase goes too high for your selected end note. Either increase your end note or lower your start note." });
       return;
     }
-    const note_length = 30 / this.state.tempo; // eighth note length
+    const note_length = 60 / this.state.tempo; // quarter note length
     this.setState({ playing: true })
     for (var i = 0; i < nRoutines; ++i) {
       for (var j = 0; j < notes.length; ++j) {
@@ -66,7 +66,7 @@ class RoutinePlayer extends React.Component {
     try {
       startNote = convertNote(this.state.startNote);
       endNote = convertNote(this.state.endNote);
-      notes = parseRawStringPhrase(this.state.phraseChosen.routine);
+      notes = parseRawStringPhrase(this.state.chosenRoutine.routine);
     } catch (err) {
       if (err instanceof InvalidInputError) {
         this.setState({ errorMessage: err.message });
@@ -99,7 +99,7 @@ class RoutinePlayer extends React.Component {
         <br />Choose your routine:&nbsp;&nbsp;
         <select className="routines" onChange={evt =>
           this.setState({
-            phraseChosen: this.routines[evt.target.value]
+            chosenRoutine: this.routines[evt.target.value]
           })
         }>
           {routineOptions}
