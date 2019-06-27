@@ -1,8 +1,10 @@
 import React from 'react';
+import { Grid } from 'semantic-ui-react'
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
 import awsmobile from './aws-exports'
 import './App.css';
+import 'semantic-ui-css/semantic.min.css'
 import RoutinePlayer from './RoutinePlayer.js'
 import CreateRoutine from './CreateRoutine.js'
 import ListRoutines from './ListRoutines.js'
@@ -29,9 +31,9 @@ class App extends React.Component {
   async assingRoutine(newRoutine) {
     const user = await Auth.currentUserInfo();
     if (newRoutine.author === user.username) {
-      this.setState({ userRoutines: this.state.userRoutines.concat(newRoutine)})
+      this.setState({ userRoutines: this.state.userRoutines.concat(newRoutine) })
     } else {
-      this.setState({ othersRoutines: this.state.othersRoutines.concat(newRoutine)})
+      this.setState({ othersRoutines: this.state.othersRoutines.concat(newRoutine) })
     }
   }
 
@@ -61,13 +63,27 @@ class App extends React.Component {
         <header className="App-header">
           Voice Exercise
         </header>
-        <RoutinePlayer 
-          userRoutines = {this.state.userRoutines}
-        />
-        <CreateRoutine />
-        <ListRoutines 
-          othersRoutines = {this.state.othersRoutines}
-        />
+        <Grid divided='vertically'>
+          <Grid.Row columns={2} divided>
+            <Grid.Column>
+              <RoutinePlayer
+                userRoutines={this.state.userRoutines}
+              />
+            </Grid.Column>
+            <Grid.Column >
+              <CreateRoutine />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <ListRoutines
+                othersRoutines={this.state.othersRoutines}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+
+
       </div>
     );
   }

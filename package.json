@@ -5,10 +5,13 @@
   "dependencies": {
     "aws-amplify": "^1.1.29",
     "aws-amplify-react": "^2.3.9",
+    "inherits": "^2.0.4",
     "midi-sounds-react": "^1.2.45",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.87.2"
   },
   "scripts": {
     "start": "react-scripts start",
