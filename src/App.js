@@ -22,8 +22,17 @@ class App extends React.Component {
     const subscription = API.graphql(
       graphqlOperation(subscriptions.onCreateRoutine)
     ).subscribe({
-      next: this.assignRoutines.bind(this)
+      next: (data) => this.assingRoutine(data.value.data.onCreateRoutine)
     });
+  }
+
+  async assingRoutine(newRoutine) {
+    const user = await Auth.currentUserInfo();
+    if (newRoutine.author === user.username) {
+      this.setState({ userRoutines: this.state.userRoutines.concat(newRoutine)})
+    } else {
+      this.setState({ othersRoutines: this.state.othersRoutines.concat(newRoutine)})
+    }
   }
 
   async assignRoutines() {
